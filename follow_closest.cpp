@@ -125,7 +125,7 @@ int main() {
 		E++;
 	}
 
-	fprintf(stderr,"Calculating shorest paths...\n");
+	fprintf(stdout,"Calculating shorest paths...\n");
     // shortest paths between all nodes using Dijkstras algorithm
 	for (uint s=0; s<N; s++) { uint start = nodes[s];
 		priority_queue<Dijk> Q;
@@ -143,7 +143,7 @@ int main() {
 			}
 		}
 	}
-	fprintf(stderr,"Calculating shorest paths... done.\n");
+	fprintf(stdout,"Calculating shorest paths... done.\n");
 	
 	// sample length of path between random nodes
 	float total=0, failed=0, stretch=0;
@@ -164,9 +164,9 @@ int main() {
 				stretch += ratio;
 			}
 		}
-		fprintf(stderr,"N=%d; remotes=%.4f; neighs= %0.4f;\n",
+		fprintf(stdout,"N=%d; remotes=%.4f; neighs= %0.4f;\n",
 				   N,          R/N,        E*2.0/N);
-		fprintf(stderr,"total=%.0fK; failed=%.0f; failrate=%f; stretch=%f;\n",
+		fprintf(stdout,"total=%.0fK; failed=%.0f; failrate=%f; stretch=%f;\n",
 				total/1000, failed, failed/total, stretch/(total-failed) );
 		setremotes();
 	}
