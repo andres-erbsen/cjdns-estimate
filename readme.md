@@ -4,6 +4,15 @@ by the length of the best route, where (abstract) length represents the actual c
 of qualities of a route we care about.
 
 The graph of the network is read from stdin in trivial graph format.
+See ex2.tgf for example, the file format is the following:
+
+	node_id address
+	...
+	#
+	node_id node_id length
+	...
+
+	
 
 In the code, the nodes that a single node is directly connected with are
 called that nodes neighbors and the nodes it knows that are in arbitrary
