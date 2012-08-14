@@ -1,4 +1,4 @@
-A simplified version of the cjdns routing algorithm to estimate the stretch of
+Simulation of a simplified version of the cjdns routing algorithm to estimate the stretch of
 the routes found by cjdns. Stretch is defined as length of route found divided
 by the length of the best route, where (abstract) length represents the actual combination
 of qualities of a route we care about.
