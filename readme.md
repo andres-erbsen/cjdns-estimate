@@ -23,7 +23,8 @@ space to the target than the starting node, it sends the packet to the physicall
 - if it doesn't, it searches for new nodes using a remote node that
  - `follow_addr`: is closest in address space to the target
  - `follow_closest`: is closest by route length to the node itself
-the remote node used for search returns all remotes it knows that are
+
+The remote node used for search returns all remotes it knows that are
 closer to the target in address space than itself. They are added to
 the querying nodes routing table for the duration of routing this packet.
 When the querying finds out about a node that is closer to the target in
