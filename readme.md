@@ -46,3 +46,5 @@ algorithm.
 
 Average route stretch and failure rate estimation are calculated by trying
 to route packets from a randomly picked node to another randomly picked node.
+
+`asgr.tgf` is the graph of autonomous systems in the Internet
