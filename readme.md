@@ -39,7 +39,7 @@ the querying nodes routing table for the duration of routing this packet.
 When the querying finds out about a node that is closer to the target in
 address space than it is itself, it sends the packet to that node through
 the node using which it was found.
-If a such node has not been found adter searching using all known remotes,
+If a such node has not been found after searching using all known remotes,
 this route is considered to be failed. Keeping track of closest nodes in
 the routing table is implemented using a priority queue a la Dijkstras
 algorithm.
