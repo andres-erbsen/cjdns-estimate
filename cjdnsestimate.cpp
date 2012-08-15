@@ -35,7 +35,7 @@ struct Dijk {
     Dijk(uint r, uint c, uint a) {
         node=r; cost=c; aux=a;
     }
-    inline bool operator< (const Dijk& other) const { // max-priority queue: reverse sorting
+    inline bool operator< (const Dijk& other) const { // max-priority queue: bigger cost is "less"
         if (cost > other.cost) return 1;
         if (cost < other.cost) return 0;
         if (aux > other.aux) return 1;
