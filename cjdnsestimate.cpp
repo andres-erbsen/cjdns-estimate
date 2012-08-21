@@ -15,7 +15,7 @@ typedef unsigned int uint;
 
 #define MAXN (16385)
 
-uint N, E;
+uint N, E, remotes_each;
 uint nodes[MAXN];
 uint addr[MAXN];
 
@@ -50,7 +50,7 @@ uint measure(uint a, uint b) {
 
 uint n_remotes(uint u) {
     uint possible = N - 1 - uint(remotes[u].size());
-    uint calculated = 10 ;// * neighs[u].size()/(E*2.0/N);
+    uint calculated = remotes_each ;// * neighs[u].size()/(E*2.0/N);
     return min(possible, calculated);
 }
 
@@ -149,7 +149,11 @@ uint query(uint u, uint target) {
 }
 
 
-int main() {
+int main(int argc, char** argv) {
+    if (argc != 2 || sscanf(argv[1],"%u",&remotes_each) != 1) {
+        fprintf(stderr,"Number of remotes as only argument, please.\n");
+        exit(1);
+    }
     // allocate loads of memory
     shortestpath = (uint**)calloc(MAXN,sizeof(uint*));
     hopsbetween = (uint**)calloc(MAXN,sizeof(uint*));
