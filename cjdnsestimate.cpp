@@ -13,7 +13,7 @@ using namespace tr1;
 
 typedef unsigned int uint;
 
-#define MAXN (15200)
+#define MAXN (16385)
 
 uint N, E;
 uint nodes[MAXN];
@@ -50,7 +50,7 @@ uint measure(uint a, uint b) {
 
 uint n_remotes(uint u) {
     uint possible = N - 1 - uint(remotes[u].size());
-    uint calculated = 10 * neighs[u].size()/(E*2.0/N);
+    uint calculated = 10 ;// * neighs[u].size()/(E*2.0/N);
     return min(possible, calculated);
 }
 
