@@ -26,7 +26,6 @@ uint **shortestpath;
 uint **hopsbetween;
 bool **sp_done;
 
-
 struct Dijk {
     uint node, cost, aux;
     Dijk(uint r, uint c) {
