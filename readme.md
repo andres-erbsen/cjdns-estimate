@@ -18,12 +18,8 @@ called that nodes neighbors and the nodes it knows that are in arbitrary
 locations are called remotes. All neighbors are also remotes. Other remotes
 are picked randomly. Routes to them are assumed to be optimal. These lists
 are static. The number of remotes as a function of the number of neighbors
-is a parameter of the model. At the moment, the number of remotes is linearly
-scaled with `N_nodes/500` for nodes with average number of neighbors. In reality
-this is a lot smaller, but with the graphs used it would have left some nodes
-without any remotes at all.
-
-There are two similar versions, which simulate routing packets as follows:
+is a parameter of the model. Number of remotes per node is given as command
+line argument to the program.
 
 - if the node the packet starts at knows nodes that are closer in address
 space to the target than the starting node, it sends the packet to the physically closest
@@ -31,8 +27,9 @@ space to the target than the starting node, it sends the packet to the physicall
 - if it doesn't, it searches for new nodes using a remote node that is
 closest by route length to the node itself. Alternative selection can be
 achieved by defining one of the following macros:
- - `BY_HOPS`: Do not consider actual path length, only number of hops in it
- - `BY_ADDR`: pick closest in address space to the target
+ - `BY_ADDR`: Pick closest in address space to the target
+ - `BY_HOPS`: Do not consider actual path length, only number of hops in it.
+Also picks an arbitrary node instead of the closest if possible next hop is known.
 
 The remote node used for search returns all remotes it knows that are
 closer to the target in address space than itself. They are added to
@@ -49,3 +46,5 @@ Average route stretch and failure rate estimation are calculated by trying
 to route packets from a randomly picked node to another randomly picked node.
 
 `asgr.tgf` is the graph of autonomous systems in the Internet.
+
+The current results (if not noted otherwise) are for the variant WITHOUT `BY_HOPS` and `BY_ADDR`.
