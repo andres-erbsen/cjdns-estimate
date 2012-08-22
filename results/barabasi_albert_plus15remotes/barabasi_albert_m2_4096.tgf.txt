@@ -1,0 +1,11 @@
+Nodes:	4096
+Edges:	8188
+Extra remotes:	61440
+Samples:	1000000
+== Average values ==
+Neighbour degree:	3.998047
+Remote degree:	15.000000
+Total degree:	18.998047
+== Results ==
+Failure rate:	0.000000
+Route Stretch	7.551715
