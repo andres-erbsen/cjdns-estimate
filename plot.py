@@ -35,7 +35,7 @@ for (n,r), raws in points.items():
     failure_lines[r] = failure_lines.get(r,[]) + [(n,f,f_w)]
     stretch_lines[r] = stretch_lines.get(r,[]) + [(n,s,s_w)]
 
-x = numpy.linspace(-1,17000,200)
+x = numpy.linspace(1,17000,200)
 y = numpy.log(x)
 pl.plot(x,y,color='black',label='ln(N)',linewidth=3)
 
@@ -53,12 +53,10 @@ for r,line in sorted(stretch_lines.items()):
     print ()
 
 pl.xlim((10, 17000))
-pl.title('Route stretch for different number of random remotes in Watts-Strogatz graphs.\n3 neighbors.')
+pl.title('Route stretch for different number of random remotes in Watts-Strogatz graphs.\n3 neighbors. Number ofhops used as routing metric.')
 pl.ylabel('Route stretch')
 pl.xlabel('Number of nodes')
 pl.legend()
 # pl.xscale('log',basex=2)
 pl.show()
-
-
 
