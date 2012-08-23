@@ -35,9 +35,9 @@ for (n,r), raws in points.items():
     failure_lines[r] = failure_lines.get(r,[]) + [(n,f,f_w)]
     stretch_lines[r] = stretch_lines.get(r,[]) + [(n,s,s_w)]
 
-x = numpy.linspace(-1,9000,200) # 100 linearly spaced numbers
+x = numpy.linspace(-1,17000,200)
 y = numpy.log(x)
-pl.plot(x,y,color='black',label='ln(x)',linewidth=3)
+pl.plot(x,y,color='black',label='ln(N)',linewidth=3)
 
 for r,line in sorted(stretch_lines.items()):
     line.sort()
@@ -52,11 +52,12 @@ for r,line in sorted(stretch_lines.items()):
     print (yws)
     print ()
 
-pl.xlim((0, 9000))
-pl.title('Route stretch for different number of random remotes in Barabasi-Albert graphs.\nLine width is standard error between graphs with 2..5 neighbours on average.')
+pl.xlim((10, 17000))
+pl.title('Route stretch for different number of random remotes in Watts-Strogatz graphs.\n3 neighbors.')
 pl.ylabel('Route stretch')
 pl.xlabel('Number of nodes')
 pl.legend()
+# pl.xscale('log',basex=2)
 pl.show()
 
 
