@@ -13,7 +13,7 @@ using namespace tr1;
 
 typedef unsigned int uint;
 
-#define MAXN (16385)
+#define MAXN (26001)
 
 uint N, E, remotes_each;
 uint nodes[MAXN];
@@ -120,29 +120,43 @@ uint search(uint u, uint target, uint* next) {
 }
 
 uint query(uint u, uint target) {
-    uint cost = 0, next = 0;
+    uint cost = 0;
     while (u != target) {
         // Route through a known node which is the shortest physical distance while still being closer in address space
-        uint min_weight = UINT_MAX;
+        Dijk nexthop = Dijk(UINT_MAX, UINT_MAX, UINT_MAX); // abuse struct for names, could use 3 vars instead
         for (map<uint,uint>::iterator it=remotes[u].begin(); it != remotes[u].end(); ++it ) {
             uint v = it->first, weight = it->second;
             if (v == target) return cost + weight;
-            if ( measure(v,target) < measure(u,target) && weight < min_weight ) {
-                min_weight = weight;
-                next = v;
-                #ifdef BY_HOPS
-                break; // all are 1 hop away so cmp by hops is arbitrary choice. So be it.
-                #endif
+            #ifdef BY_HOPS
+                #define COST (hopsbetween[u][v])
+                #define AUX  (weight)
+            #elif defined BY_ADDR
+                #define COST (measure(u,target))
+                #define AUX  (weight)
+            #else
+                #define COST (weight)
+                #define AUX  (0)
+            #endif
+            if ( measure(v,target) < measure(u,target) && COST < nexthop.cost ) {
+                nexthop = Dijk(v,COST,AUX);
             }
+            #undef COST
+            #undef AUX
         }
-        if (min_weight == UINT_MAX) { // no known nodes closer in address space than us
-            min_weight = search(u,target,&next); // let's see if somebody else knows one
-            if (min_weight == UINT_MAX) { // didn't work either. Giving up.
+        if (nexthop.cost == UINT_MAX) { // no known nodes closer in address space than us
+            nexthop.cost = search(u, target, &nexthop.node); // let's see if somebody else knows one
+            if (nexthop.cost == UINT_MAX) { // didn't work either. Giving up.
                 return UINT_MAX;
             }
         }
-        cost += min_weight;
-        u = next;
+        #ifdef BY_HOPS
+            cost += nexthop.aux;
+        #elif defined BY_ADDR
+            cost += nexthop.aux;
+        #else
+            cost += nexthop.cost;
+        #endif
+        u = nexthop.node;
     }
     return cost;
 }
