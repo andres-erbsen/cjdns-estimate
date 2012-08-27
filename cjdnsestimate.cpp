@@ -68,7 +68,7 @@ uint setremotes() {
     return count;
 }
 
-uint search(uint u, uint target, uint* next) {
+Dijk search(uint u, uint target) {
     unordered_set<uint> Done; Done.insert(u); // nodes already searched.
     priority_queue<Dijk> Q; // Queue of nodes for sending search queries
     for (map<uint,uint>::iterator it=remotes[u].begin(); it != remotes[u].end(); ++it ) {
@@ -79,7 +79,7 @@ uint search(uint u, uint target, uint* next) {
         #elif defined BY_ADDR
         Q.push(Dijk(v, measure(u,v), weight ));
         #else
-        Q.push(Dijk(v, weight)); // by distance
+        Q.push(Dijk(v, weight, weight)); // by distance
         #endif
     }
     while (!Q.empty()) {
@@ -93,72 +93,57 @@ uint search(uint u, uint target, uint* next) {
             // valid search responses are closer in address space than the responding node
             if ( w != u && measure(target,w) < measure(target,v)) { 
                 if ( measure(target,w) < measure(target,u) ) { // closer in addres space than us
-                    *next = w; // route there :)
-                    #ifdef BY_HOPS
-                    return so_far.aux +weight;
-                    #elif defined BY_ADDR
-                    return so_far.aux +weight;
-                    #else
-                    return so_far.cost +weight;
-                    #endif
+                    return Dijk(w, 0, so_far.aux +weight);
                 }
                 // we can also search through the nodes in the response
                 if (Done.find(w) == Done.end()) {
                     #ifdef BY_HOPS
-                    Q.push(Dijk(w, so_far.cost+1, so_far.aux+weight));
+                    Q.push(Dijk(w, so_far.cost+1     , so_far.aux+weight));
                     #elif defined BY_ADDR
-                    Q.push(Dijk(w, measure(u,w), so_far.aux+weight ));
+                    Q.push(Dijk(w, measure(u,w)      , so_far.aux+weight));
                     #else
-                    Q.push(Dijk(w, so_far.cost+weight)); // by distance
+                    Q.push(Dijk(w, so_far.cost+weight, so_far.aux+weight));
                     #endif
                 }
             }
         }
     }
     // found nothing
-    return UINT_MAX;
+    return Dijk(UINT_MAX, UINT_MAX, UINT_MAX);
 }
 
 uint query(uint u, uint target) {
-    uint cost = 0;
+    uint ret = 0;
     while (u != target) {
         // Route through a known node which is the shortest physical distance while still being closer in address space
         Dijk nexthop = Dijk(UINT_MAX, UINT_MAX, UINT_MAX); // abuse struct for names, could use 3 vars instead
         for (map<uint,uint>::iterator it=remotes[u].begin(); it != remotes[u].end(); ++it ) {
             uint v = it->first, weight = it->second;
-            if (v == target) return cost + weight;
+            if (v == target) return ret + weight;
             #ifdef BY_HOPS
                 #define COST (hopsbetween[u][v])
-                #define AUX  (weight)
             #elif defined BY_ADDR
                 #define COST (measure(u,target))
-                #define AUX  (weight)
             #else
                 #define COST (weight)
-                #define AUX  (0)
             #endif
             if ( measure(v,target) < measure(u,target) && COST < nexthop.cost ) {
-                nexthop = Dijk(v,COST,AUX);
+                nexthop.node = v;
+                nexthop.cost = COST;
+                nexthop.aux = weight;
             }
             #undef COST
-            #undef AUX
         }
-        if (nexthop.cost == UINT_MAX) { // no known nodes closer in address space than us
-            nexthop.cost = search(u, target, &nexthop.node); // let's see if somebody else knows one
-            if (nexthop.cost == UINT_MAX) { // didn't work either. Giving up.
+        if (nexthop.aux == UINT_MAX) { // no known nodes closer in address space than us
+            nexthop = search(u, target); // let's see if somebody else knows one
+            if (nexthop.aux == UINT_MAX) { // didn't work either. Giving up.
                 return UINT_MAX;
             }
         }
-        #ifdef BY_HOPS
-            cost += nexthop.aux;
-        #elif defined BY_ADDR
-            cost += nexthop.aux;
-        #else
-            cost += nexthop.cost;
-        #endif
+        ret += nexthop.aux;
         u = nexthop.node;
     }
-    return cost;
+    return ret;
 }
 
 
